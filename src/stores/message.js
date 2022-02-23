@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 export const useMessageStore = defineStore('message', {
     state: () => {
-        return { message: 'some text' };
+        return { message: 'Hello world' };
     },
     actions: {
         saveMessage(val) {

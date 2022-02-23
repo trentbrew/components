@@ -50,44 +50,53 @@
             ${ saved && 'ping' }
         `"
         >
+
+            <!-- input -->
+
             <div class="w-full">
                 <input
+                type="text"
                 :value="modelValue"
                 @input="$emit('update:modelValue', $event.target.value)"
                 :placeholder="placeholder || 'type here'" 
-                :type="type || 'text'"
                 :disabled="!editing"
                 class="bg-transparent outline-none w-full py-4 pl-6 text-3xl font-medium"
                 />
             </div>
+
             <!-- edit -->
+
             <button 
-            @click="edit" @mouseenter="hoverEdit = true" @mouseleave="hoverEdit = false"
-            class="h-5 w-5 rounded-full opacity-100 duration-200 translate-x-10" 
-            :class="editing ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100 delay-300'"
+            @click="edit" 
+            class="h-5 w-5 rounded-full opacity-100 duration-200" 
+            :class="editing ? 'opacity-0 scale-50 pointer-events-none w-0 -translate-x-2' : 'opacity-100 -translate-x-4 delay-200'"
             >
-                <svg class="hover:fill-green-600" viewBox="0 0 24 24">
+                <svg class="fill-gray-600 hover:fill-[#18A058]" viewBox="0 0 24 24">
                     <path d="M13.94 5L19 10.06L9.062 20a2.25 2.25 0 0 1-.999.58l-5.116 1.395a.75.75 0 0 1-.92-.921l1.395-5.116a2.25 2.25 0 0 1 .58-.999L13.938 5zm7.09-2.03a3.578 3.578 0 0 1 0 5.06l-.97.97L15 3.94l.97-.97a3.578 3.578 0 0 1 5.06 0z"></path>
                 </svg>
             </button>
+
             <!-- save -->
+
             <button 
             @click="save" 
-            class="h-8 w-8 -translate-x-4 duration-200 hover:scale-[1.1]" 
-            :class="!editing ? 'opacity-0 !scale-50 pointer-events-none' : 'opacity-100 delay-100'"
+            class="h-8 w-8 -translate-x-4 duration-200"
+            :class="!editing ? 'opacity-0 !scale-50 pointer-events-none w-0' : 'opacity-100 delay-100'"
             >
-                <svg class="fill-green-600" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8zm3.88-11.71L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z"></path>
+                <svg class="fill-[#18A058] hover:opacity-60" viewBox="0 0 24 24">
+                    <path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2zm3.22 6.97l-4.47 4.47l-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5-5a.75.75 0 1 0-1.06-1.06z"></path>
                 </svg>
             </button>
+
             <!-- cancel -->
+
             <button 
             @click="cancel" 
-            class="h-8 w-8 -translate-x-4 duration-200 ml-1 hover:scale-[1.1]" 
-            :class="!editing ? 'opacity-0 !scale-50 pointer-events-none delay-100' : 'opacity-50'"
+            class="h-8 w-8 -translate-x-4 duration-200 ml-1" 
+            :class="!editing ? 'opacity-0 !scale-50 pointer-events-none w-0 delay-100' : 'opacity-100'"
             >
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8zm3.59-13L12 10.59L8.41 7L7 8.41L10.59 12L7 15.59L8.41 17L12 13.41L15.59 17L17 15.59L13.41 12L17 8.41z"></path>
+                <svg class="fill-gray-400 rotate-45 hover:opacity-60" viewBox="0 0 24 24">
+                    <path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2zm0 5a.75.75 0 0 0-.743.648l-.007.102v3.5h-3.5a.75.75 0 0 0-.102 1.493l.102.007h3.5v3.5a.75.75 0 0 0 1.493.102l.007-.102v-3.5h3.5a.75.75 0 0 0 .102-1.493l-.102-.007h-3.5v-3.5A.75.75 0 0 0 12 7z"></path>
                 </svg>
             </button>
         </div>
