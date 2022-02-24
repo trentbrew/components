@@ -8,23 +8,23 @@ const store = useMessageStore();
 
 const opts = ref([
     {
-        label: 'Sushi',
+        label: 'Option 1',
         value: 'sushi',
     },
     {
-        label: 'Pizza',
+        label: 'Option 2',
         value: 'pizza',
     },
     {
-        label: 'Soup',
+        label: 'Option 3',
         value: 'soup',
     },
     {
-        label: 'Sandwich',
+        label: 'Option 4',
         value: 'sandwich',
     },
     {
-        label: 'Salad',
+        label: 'Option 5',
         value: 'salad',
     },
 ]);
