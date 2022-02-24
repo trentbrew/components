@@ -4,25 +4,37 @@
 
   const themeOverrides = {
     Input: {
-      "color": "rgba(0,0,0,0)",
-      "colorDisabled": "rgba(0,0,0,0)",
-      "border": "none",
-      "borderHover": "none",
-      "borderDisabled": "none",
-      "borderFocus": "none",
-      "boxShadowFocus": "none",
-      "borderRadius": "64px",
-      "paddingSmall": "0px",
-      "paddingMedium": "0px",
-      "paddingLarge": "0px",
-      "placeholderColor": "#bdbdbd",
-      "fontSizeMedium": "18px",
-
+      color: "rgba(0,0,0,0)",
+      colorDisabled: "rgba(0,0,0,0)",
+      border: "none",
+      borderHover: "none",
+      borderDisabled: "none",
+      borderFocus: "none",
+      boxShadowFocus: "none",
+      borderRadius: "64px",
+      paddingSmall: "0px",
+      paddingMedium: "0px",
+      paddingLarge: "0px",
+      placeholderColor: "#bdbdbd",
+      fontSizeMedium: "18px",
     },
     Select: {
       peers: {
         InternalSelection: {
-          textColor: '#FF0000'
+          color: "rgba(0,0,0,0)",
+          colorDisabled: "rgba(0,0,0,0)",
+          border: "none",
+          borderHover: "none",
+          borderDisabled: "none",
+          borderFocus: "none",
+          borderRadius: "6px",
+          boxShadowFocus: "none",
+          paddingTiny: "0px",
+          paddingSmall: "0px",
+          paddingMedium: "0px",
+          paddingLarge: "0px",
+          placeholderColor: "#bdbdbd",
+          fontSizeMedium: "18px",
         }
       }
     },

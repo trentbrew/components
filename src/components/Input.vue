@@ -1,68 +1,154 @@
 <script setup>
-    import { ref, reactive, defineEmits, defineProps, computed, onMounted } from 'vue';
-    import { NInput } from 'naive-ui';
+import { ref, reactive, defineEmits, defineProps, computed, onMounted } from 'vue';
+import { useTippy } from 'vue-tippy';
+import { NInput, NSelect } from 'naive-ui';
 
-    const emit = defineEmits([
-        'update:modelValue',
-        'edit',
-        'save',
-        'cancel'
-    ]);
+const emit = defineEmits([
+    'update:modelValue',
+    'edit',
+    'save',
+    'cancel',
+]);
 
-    const props = defineProps([
-        'modelValue',
-        'type',
-        'label',
-        'placeholder',
-        'color'
-    ]);
+const props = defineProps([
+    'modelValue',
+    'type',
+    'label',
+    'placeholder',
+    'color',
+    'filterable',
+    'options',
+]);
 
-    const editing = ref(false);
-    const hoverEdit = ref(false);
-    const hoverInput = ref(false);
-    const saved = ref(false);
-    const done = ref(false);
+const sampleOptions = ref([
+    {
+        label: 'Option 1',
+        value: 1,
+    },
+    {
+        label: 'Option 2',
+        value: 2,
+    },
+    {
+        label: 'Option 3',
+        value: 3,
+    },
+    {
+        label: 'Option 4',
+        value: 4,
+    },
+    {
+        label: 'Option 5',
+        value: 5,
+    },
+]);
 
-    function edit() {
-        emit('edit');
-        editing.value = true;
+const hoverEdit = ref(false);
+const hoverInput = ref(false);
+const focusing = ref(false);
+const editing = ref(false);
+const saved = ref(false);
+const done = ref(false);
+
+const input = ref();
+const saveButton = ref();
+const editButton = ref();
+const cancelButton = ref();
+
+const caretX = ref('48px');
+const caretFill = ref('#bdbdbd');
+
+function log(msg) {
+    console.log(msg);
+}
+
+function edit() {
+    emit('edit');
+    editing.value = true;
+    caretX.value = '0px';
+    caretFill.value = '#888888';
+}
+
+function save() {
+    emit('save');
+    saved.value = true;
+    setTimeout(() => {
+        saved.value = false;
+    }, 1000);
+    done.value = true;
+    setTimeout(() => {
+        done.value = false;
+    }, 500);
+    editing.value = false;
+    caretX.value = '24px';
+    caretFill.value = '#bdbdbd';
+}
+
+function cancel() {
+    emit('cancel');
+    editing.value = false;
+    done.value = true;
+    setTimeout(() => {
+        done.value = false;
+    }, 500);
+    caretX.value = '24px';
+    caretFill.value = '#bdbdbd';
+}
+
+function blur() {
+    emit('cancel');
+    editing.value = false;
+    done.value = true;
+    setTimeout(() => {
+        done.value = false;
+    }, 500);
+    caretX.value = '48px';
+    caretFill.value = '#bdbdbd';
+}
+
+function handleFocus(e) {
+    //console.log('event:', e);
+}
+
+function wait(duration, callback) {
+    setTimeout(() => {
+        callback();
+    }, duration);
+}
+
+function handleButtonHover(name) {
+    /*let context;
+    if (name === 'Save') {
+        context = saveButton;
+    } else if (name === 'Edit') {
+        context = editButton;
+    } else { // cancel
+        context = cancelButton;
     }
+    useTippy(context, {
+        content: name,
+        animation: fade,
+        animateFill: true,
+    });*/
+}
 
-    function save() {
-        emit('save');
-        saved.value = true;
-        setTimeout(() => {
-            saved.value = false;
-        }, 1500);
-        done.value = true;
-        setTimeout(() => {
-            done.value = false;
-        }, 500);
-        editing.value = false;
-    }
-
-    function cancel() {
-        emit('cancel');
-        editing.value = false;
-        done.value = true;
-        setTimeout(() => {
-            done.value = false;
-        }, 500);
-    }
+onMounted(() => {
+    console.log('input mounted', input);
+});
 </script>
 
 <template>
     <div 
     class="__custom-input flex mt-1 w-full" 
-    @mouseenter="hoverInput = true" 
-    @mouseleave="hoverInput = false"
+    @mouseover="() => { hoverInput = true; caretX = ( editing ? '0px' : '24px'); }" 
+    @mouseleave="() => { hoverInput = false; caretX = ( editing ? '0px' : '48px' ); }"
     >
         <div 
         class="flex items-center duration-200 w-full rounded-xl border-2" 
         :class="`
             ${saved && 'ping'}
-            ${(!type || type === 'text' || type === 'select') && `${ editing && 'border-[#18A058] shadow-lg shadow-green-100'}`} 
-            ${(type === 'header') && `${ editing ? `border-transparent !shadow-lg shadow-green-100` : `!border-transparent` } ${ saved && 'ping'} ${ hoverEdit && '!border-gray-200' }`}
+            ${(!type || type === 'text' || type === 'select') && `${ editing && 'border-[#18A058] shadow-lg shadow-green-50'}`} 
+            ${(type === 'header') && `${ editing ? `border-transparent !shadow-lg` : `!border-transparent` } ${ saved && 'ping'} ${ hoverEdit && '!border-gray-200' }`}
         `">
 
             <!-- input types -->
@@ -71,37 +157,48 @@
 
                 <label 
                 v-if="type !== 'header'" 
-                class="absolute text-gray-600 bg-white text-xs translate-x-4 translate-y-[-8px] px-2 tracking-widest uppercase font-bold z-50"
+                class="absolute text-gray-600 bg-white text-xs translate-x-4 translate-y-[-8px] px-2 tracking-widest uppercase font-bold z-40"
                 >{{ label || 'label' }}
                 </label>
 
                 <n-input
                 v-if="!type || type === 'text'"
+                ref="input"
                 v-model:value="modelValue"
                 :on-input="$emit('update:modelValue', modelValue)"
-                :placeholder="placeholder || 'type here'" 
+                :placeholder="placeholder || 'Text'" 
                 :disabled="!editing"
                 :class="!editing && 'pointer-events-none'"
                 class="bg-transparent outline-none w-full pl-6 py-3"
+                @blur="(e) => e.relatedTarget?.classList[0] !== '__save' && e.relatedTarget?.classList[0] !== '__cancel' && blur()"
+                @focus="handleFocus"
                 />
 
-                <!--n-input
-                v-if="!type || type === 'select'"
+                <n-select
+                v-if="type === 'select'"
+                ref="input"
                 v-model:value="modelValue"
+                :options="options || sampleOptions"
                 :on-input="$emit('update:modelValue', modelValue)"
-                :placeholder="placeholder || 'type here'" 
+                :filterable="filterable || true"
+                :placeholder="placeholder || 'Select'" 
                 :disabled="!editing"
                 :class="!editing && 'pointer-events-none'"
-                class="bg-transparent outline-none w-full pl-6 py-3"
-                /-->
+                class="bg-transparent !outline-none w-full pl-3 py-3"
+                @blur="(e) => e.relatedTarget?.classList[0] !== '__save' && e.relatedTarget?.classList[0] !== '__cancel' && blur()"
+                @focus="handleFocus"
+                />
 
                 <input
                 v-if="type === 'header'"
+                ref="input"
                 :value="modelValue"
-                @input="$emit('update:modelValue', $event.target.value)"
                 :placeholder="placeholder || 'Header'" 
                 :disabled="!editing"
                 class="bg-transparent outline-none w-full pl-3 py-3 text-3xl font-bold placeholder:text-gray-300"
+                @input="$emit('update:modelValue', $event.target.value)"
+                @blur="(e) => e.relatedTarget?.classList[0] !== '__save' && e.relatedTarget?.classList[0] !== '__cancel' && blur()"
+                @focus="handleFocus"
                 />
 
             </div>
@@ -114,8 +211,9 @@
             `">
                 <!-- edit -->
                 <button 
-                @click="edit" 
-                @mouseenter="hoverEdit = false" 
+                ref="editButton"
+                @click="() => { edit(); wait(200, () => { input.focus(); }); }" 
+                @mouseover="() => { hoverEdit = false; handleButtonHover('Edit'); }" 
                 @mouseleave="hoverEdit = false"
                 class="__edit h-5 w-5 rounded-full translate-x-12" 
                 :class="`
@@ -123,14 +221,16 @@
                     ${done && 'delay-[250ms]'}
                 `"
                 >
-                    <svg class="fill-gray-600 hover:fill-[#18A058]" viewBox="0 0 24 24">
+                    <svg class="fill-black hover:fill-[#18A058]" viewBox="0 0 24 24">
                         <path d="M13.94 5L19 10.06L9.062 20a2.25 2.25 0 0 1-.999.58l-5.116 1.395a.75.75 0 0 1-.92-.921l1.395-5.116a2.25 2.25 0 0 1 .58-.999L13.938 5zm7.09-2.03a3.578 3.578 0 0 1 0 5.06l-.97.97L15 3.94l.97-.97a3.578 3.578 0 0 1 5.06 0z"></path>
                     </svg>
                 </button>
-
                 <!-- save -->
                 <button 
+                ref="saveButton"
                 @click="save" 
+                @mouseover="() => { hoverEdit = false; handleButtonHover('Save'); }" 
+                @mouseleave="hoverEdit = false"
                 class="__save h-8 w-8 -translate-x-4 duration-200"
                 :class="!editing ? 'opacity-0 !scale-50 pointer-events-none' : 'opacity-100 delay-100'"
                 >
@@ -138,10 +238,12 @@
                         <path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2zm3.22 6.97l-4.47 4.47l-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5-5a.75.75 0 1 0-1.06-1.06z"></path>
                     </svg>
                 </button>
-
                 <!-- cancel -->
                 <button 
-                @click="cancel" 
+                ref="cancelButton"
+                @click="cancel"
+                @mouseover="() => { hoverEdit = false; handleButtonHover('Cancel'); }" 
+                @mouseleave="hoverEdit = false"
                 class="__cancel h-8 w-8 -translate-x-4 duration-200 ml-1" 
                 :class="!editing ? 'opacity-0 !scale-50 pointer-events-none delay-100' : 'opacity-100'"
                 >
@@ -154,18 +256,31 @@
     </div>
 </template>
 
-<style scoped>
-    .__buttons {
-        min-width: max-content;
+<style>
+.n-base-suffix__arrow {
+    transition: 400ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    transform: scale(1.5) translateX(v-bind(caretX)) !important;
+}
+.n-base-suffix__arrow svg path {
+    fill: v-bind(caretFill) !important;
+}
+.n-base-selection__state-border {
+    display: none !important;
+}
+.n-base-selection-input {
+    background: transparent !important;
+}
+.__buttons {
+    min-width: max-content;
+}
+.ping {
+    animation: ping 1s ease forwards;
+}
+@keyframes ping {
+    from {
+        @apply bg-green-100;
+    } to {
+        @apply bg-transparent;
     }
-    .ping {
-        animation: ping 1.5s ease forwards;
-    }
-    @keyframes ping {
-        from {
-            @apply bg-green-100;
-        } to {
-            @apply bg-white;
-        }
-    }
+}
 </style>

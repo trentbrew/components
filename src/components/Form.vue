@@ -1,13 +1,53 @@
 <script setup>
-    import { ref, reactive, computed, onMounted } from 'vue';
-    import { useMessageStore } from '../stores/message';
+import { ref, reactive, computed, onMounted } from 'vue';
+import { useMessageStore } from '../stores/message';
 
-    import Input from './Input.vue';
+import Input from './Input.vue';
 
-    const store = useMessageStore();
+const store = useMessageStore();
+
+const opts = ref([
+    {
+        label: 'Sushi',
+        value: 'sushi',
+    },
+    {
+        label: 'Pizza',
+        value: 'pizza',
+    },
+    {
+        label: 'Soup',
+        value: 'soup',
+    },
+    {
+        label: 'Sandwich',
+        value: 'sandwich',
+    },
+    {
+        label: 'Salad',
+        value: 'salad',
+    },
+]);
+
 </script>
 
 <template>
+
+<!--
+
+
+                    style="width: 220px"
+                    class=""
+                    placeholder="Select Vendor Category"
+                    :options="vendorCategoryOptions"
+                    v-model:value="form.vendor_category_id"
+                    @focus="currentActiveField = 'vendor_category_id'"
+                    filterable
+
+
+
+-->
+
     <div class="__form block">
 
         <h3 class="font-bold translate-x-4 mb-4">VENDOR</h3>
@@ -20,7 +60,7 @@
             <div class="col-span-6"><Input label="Address 2" /></div>
 
             <div class="col-span-4"><Input label="City" /></div>
-            <div class="col-span-4"><Input type="select" label="State" /></div>
+            <div class="col-span-4"><Input type="select" :options="opts" label="State" placeholder="Missouri" /></div>
             <div class="col-span-4"><Input label="Zip Code" /></div>
 
             <div class="col-span-4"><Input label="Email" placeholder="" /></div>
@@ -29,7 +69,7 @@
 
             <div class="col-span-4"><Input label="DIN" /></div>
             <div class="col-span-4"><Input label="Tax ID" /></div>
-            <div class="col-span-4"><Input label="Vendor Category" /></div>
+            <div class="col-span-4"><Input type="select" :options="opts" label="Vendor Category" /></div>
 
         </div>
     </div>
