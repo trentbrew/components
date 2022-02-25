@@ -2,14 +2,35 @@
 import { ref, onMounted } from "vue";
 import { useMessageStore } from "../stores/message";
 
-import Form from "../components/Form.vue";
 import Input from "../components/Input.vue";
+import Tabs from "../components/Tabs.vue";
+import Form from "../components/Form.vue";
 
 const store = useMessageStore();
 
 let current = ref(0);
 let message = ref(store.message);
 let name = ref(null);
+let phone = ref('');
+
+const exampleItems = ref([
+    {
+        title: 'ITEM1',
+        value: '1'
+    },
+    {
+        title: 'ITEM2',
+        value: '2'
+    },
+    {
+        title: 'ITEM3',
+        value: '3'
+    },
+    {
+        title: 'ITEM4',
+        value: '4'
+    },
+]);
 
 function handleSave() {
   console.log("saved: ", message.value);
@@ -25,7 +46,8 @@ function handleCancel() {
   <div class="__home bg-gray-100">
     <ul class="absolute top-8 flex w-screen justify-center items-center font-bold">
       <li @click="current = 0" :class="current == 0 && '!opacity-100'">Input.vue</li>
-      <li @click="current = 1" :class="current == 1 && '!opacity-100'">Form.vue</li>
+      <li @click="current = 2" :class="current == 2 && '!opacity-100'">Form.vue</li>
+      <li @click="current = 3" :class="current == 3 && '!opacity-100'">Tabs.vue</li>
     </ul>
     <div class="flex justify-center items-center w-screen h-screen">
       <div
@@ -43,7 +65,9 @@ function handleCancel() {
           @cancel="handleCancel"
         />
 
-        <Form v-if="current == 1" />
+        <Form v-if="current == 2" />
+        
+        <Tabs :items="exampleItems" v-if="current == 3" />
 
       </div>
     </div>

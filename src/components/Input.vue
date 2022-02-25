@@ -1,23 +1,26 @@
 <script setup>
 import { ref, reactive, defineEmits, defineProps, computed, onMounted } from 'vue';
-import { useTippy } from 'vue-tippy';
 import { NInput, NSelect } from 'naive-ui';
 
 const emit = defineEmits([
-    'update:modelValue',
+    'update:value',
+    'focus',
+    'scroll',
     'edit',
     'save',
     'cancel',
 ]);
 
 const props = defineProps([
-    'modelValue',
+    'value',
     'type',
     'label',
     'placeholder',
     'color',
     'filterable',
     'options',
+    'mask',
+    'scroll',
 ]);
 
 const sampleOptions = ref([
@@ -106,31 +109,13 @@ function blur() {
     caretFill.value = '#bdbdbd';
 }
 
-function handleFocus(e) {
-    //console.log('event:', e);
-}
-
 function wait(duration, callback) {
     setTimeout(() => {
         callback();
     }, duration);
 }
 
-function handleButtonHover(name) {
-    /*let context;
-    if (name === 'Save') {
-        context = saveButton;
-    } else if (name === 'Edit') {
-        context = editButton;
-    } else { // cancel
-        context = cancelButton;
-    }
-    useTippy(context, {
-        content: name,
-        animation: fade,
-        animateFill: true,
-    });*/
-}
+function handleButtonHover(name) {}
 
 onMounted(() => {
     console.log('input mounted', input);
@@ -162,43 +147,46 @@ onMounted(() => {
                 </label>
 
                 <n-input
-                v-if="!type || type === 'text'"
                 ref="input"
-                v-model:value="modelValue"
-                :on-input="$emit('update:modelValue', modelValue)"
+                v-if="!type || type === 'text'"
+                v-model:value="value"
+                class="bg-transparent outline-none w-full pl-6 py-3"
+                :on-input="$emit('update:value', value)"
                 :placeholder="placeholder || 'Text'" 
                 :disabled="!editing"
                 :class="!editing && 'pointer-events-none'"
-                class="bg-transparent outline-none w-full pl-6 py-3"
                 @blur="(e) => e.relatedTarget?.classList[0] !== '__save' && e.relatedTarget?.classList[0] !== '__cancel' && blur()"
-                @focus="handleFocus"
+                @focus="(e) => { $emit('focus', e); }"
+                @scroll="(e) => $emit('scroll', e)"
                 />
 
                 <n-select
-                v-if="type === 'select'"
                 ref="input"
-                v-model:value="modelValue"
+                v-if="type === 'select'"
+                v-model:value="value"
+                class="bg-transparent !outline-none w-full pl-3 py-3"
+                :class="!editing && 'pointer-events-none'"
                 :options="options || sampleOptions"
-                :on-input="$emit('update:modelValue', modelValue)"
                 :filterable="filterable || true"
                 :placeholder="placeholder || 'Select'" 
                 :disabled="!editing"
-                :class="!editing && 'pointer-events-none'"
-                class="bg-transparent !outline-none w-full pl-3 py-3"
+                :on-input="$emit('update:value', value)"
+                :on-scroll="(e) => $emit('scroll', e)"
                 @blur="(e) => e.relatedTarget?.classList[0] !== '__save' && e.relatedTarget?.classList[0] !== '__cancel' && blur()"
-                @focus="handleFocus"
+                @focus="(e) => $emit('focus', e)"
                 />
 
                 <input
-                v-if="type === 'header'"
                 ref="input"
-                :value="modelValue"
+                v-if="type === 'header'"
+                class="bg-transparent outline-none w-full pl-3 py-3 text-3xl font-bold placeholder:text-gray-300"
+                :value="value"
                 :placeholder="placeholder || 'Header'" 
                 :disabled="!editing"
-                class="bg-transparent outline-none w-full pl-3 py-3 text-3xl font-bold placeholder:text-gray-300"
-                @input="$emit('update:modelValue', $event.target.value)"
+                :on-scroll="(e) => $emit('scroll', e)"
+                @input="$emit('update:value', $event.target.value)"
                 @blur="(e) => e.relatedTarget?.classList[0] !== '__save' && e.relatedTarget?.classList[0] !== '__cancel' && blur()"
-                @focus="handleFocus"
+                @focus="(e) => $emit('focus', e)"
                 />
 
             </div>

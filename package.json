@@ -7,15 +7,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "jquery": "^3.6.0",
+    "maska": "^1.5.0",
     "pinia": "^2.0.11",
     "tippy": "0.0.0",
+    "v-mask": "^2.3.0",
     "vue": "^3.2.25",
+    "vue-observe-visibility": "^1.0.0",
+    "vue-phone-mask-input": "^1.1.11",
     "vue-router": "^4.0.12",
+    "vue-the-mask": "^0.11.1",
     "vue-tippy": "^6.0.0-alpha.52"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.0.0",
     "autoprefixer": "^10.4.2",
+    "inputmask": "^5.0.7",
     "naive-ui": "^2.25.3",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.23",
